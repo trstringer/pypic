@@ -35,6 +35,7 @@ def main():
     parser.add_argument(
         '-d', '--duration',
         default=10,
+        type=float,
         help='Duration (in seconds) to run the video loop'
     )
     args = parser.parse_args()
