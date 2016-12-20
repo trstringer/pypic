@@ -9,7 +9,7 @@ setup(
     install_requires=['azure-storage'],
     entry_points={
         'console_scripts': [
-            'pypic = main.__main__:main'
+            'pypic = app.app:main'
         ]
     }
 )
