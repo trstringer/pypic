@@ -14,7 +14,7 @@ if not os.path.exists(log_dir):
 logging.basicConfig(
     filename=os.path.join(log_dir, 'pypiclog'),
     format='%(asctime)s :: %(levelname)s :: %(message)s',
-    level=logging.ERROR
+    level=logging.DEBUG
 )
 
 def exception_handler(exception_type, exception, traceback):
@@ -24,6 +24,8 @@ sys.excepthook = exception_handler
 
 def main():
     """Main script execution"""
+
+    logger.debug('Starting main() execution...')
 
     camera_controller = CameraController(
         os.path.expanduser('~/pypic_output'),
