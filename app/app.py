@@ -15,7 +15,7 @@ if not os.path.exists(log_dir):
 logging.basicConfig(
     filename=os.path.join(log_dir, 'pypiclog'),
     format='%(asctime)s :: %(levelname)s :: %(message)s',
-    level=logging.DEBUG
+    level=logging.ERROR
 )
 
 def exception_handler(exception_type, exception, traceback):
@@ -38,14 +38,30 @@ def main():
         type=float,
         help='Duration (in seconds) to run the video loop'
     )
+    parser.add_argument(
+        '-o', '--outputdir',
+        help='Local directory to store video files'
+    )
     args = parser.parse_args()
 
-    camera_controller = CameraController(
-        os.path.expanduser('~/pypic_output'),
-        CloudStorage(
-            os.environ.get('AZSTORAGE_ACCOUNT_NAME'),
-            os.environ.get('AZSTORAGE_ACCOUNT_KEY')
+    if not args.outputdir:
+        error_msg = 'You must specify an output directory (-o, --outputdir)'
+        logger.error(error_msg)
+        print(error_msg)
+        sys.exit(1)
+
+    cloud_storage_account_name = os.environ.get('AZSTORAGE_ACCOUNT_NAME')
+    cloud_storage_account_key = os.environ.get('AZSTORAGE_ACCOUNT_KEY')
+    cloud_storage = None
+    if cloud_storage_account_name and cloud_storage_account_key:
+        cloud_storage = CloudStorage(
+            cloud_storage_account_name,
+            cloud_storage_account_key
         )
+
+    camera_controller = CameraController(
+        os.path.expanduser(args.outputdir),
+        cloud_storage
     )
     camera_controller.record_video(
         continuous=args.continuous,
