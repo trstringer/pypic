@@ -4,8 +4,8 @@ import argparse
 import logging
 import os
 import sys
-from cameracontroller.cameracontroller import CameraController
-from storage.cloudstorage import CloudStorage
+from cameracontroller import CameraController
+from storage import CloudStorage
 
 def setup_logger():
     """Create the log directory if
