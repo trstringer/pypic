@@ -21,13 +21,13 @@ This has been tested on a `Raspberry Pi 2 Model B` and with a `Raspberry Pi Came
 $ pypic -h
 
 # capture a continuous loop of video for 10 seconds (default)
-$ pypic -c
+$ pypic -c -o /video/output/dir/
 
 # capture a 60 second video
-$ pypic -d 60
+$ pypic -d 60 -o /video/output/dir/
 
 # continuously capture 5 minutes videos
-$ pypic -c -d 300
+$ pypic -c -d 300 -o /video/output/dir/
 ```
 
 ## Run on startup
