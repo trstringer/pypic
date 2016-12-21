@@ -7,24 +7,38 @@ import sys
 from cameracontroller.cameracontroller import CameraController
 from storage.cloudstorage import CloudStorage
 
-logger = logging.getLogger('pypic')
-log_dir = os.path.expanduser('~/log')
-if not os.path.exists(log_dir):
-    os.makedirs(log_dir)
+def setup_logger():
+    """Create the log directory if
+    it doesn't exist and setup the
+    logging configuration
+    """
 
-logging.basicConfig(
-    filename=os.path.join(log_dir, 'pypiclog'),
-    format='%(asctime)s :: %(levelname)s :: %(message)s',
-    level=logging.ERROR
-)
+    logger = logging.getLogger('pypic')
+    log_dir = os.path.expanduser('~/log')
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
 
-def exception_handler(exception_type, exception, traceback):
-    logger.error(str(exception))
+    logging.basicConfig(
+        filename=os.path.join(log_dir, 'pypiclog'),
+        format='%(asctime)s :: %(levelname)s :: %(message)s',
+        level=logging.ERROR
+    )
+    return logger
 
-sys.excepthook = exception_handler
+def exception_handler(exception_type, exception, traceback): # pylint: disable=unused-argument
+    """This is the logging handler that
+    will log uncaught exceptions. This
+    is important for running unattended
+    """
+
+    logging.error(str(exception))
+
 
 def main():
     """Main script execution"""
+
+    logger = setup_logger()
+    sys.excepthook = exception_handler
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
