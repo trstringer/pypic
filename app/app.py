@@ -33,7 +33,6 @@ def exception_handler(exception_type, exception, traceback): # pylint: disable=u
 
     logging.error(str(exception))
 
-
 def main():
     """Main script execution"""
 
@@ -56,6 +55,10 @@ def main():
         '-o', '--outputdir',
         help='Local directory to store video files'
     )
+    parser.add_argument(
+        '-t', '--containername',
+        help='Cloud storage container name (default \'pypic\')'
+    )
     args = parser.parse_args()
 
     if not args.outputdir:
@@ -70,7 +73,8 @@ def main():
     if cloud_storage_account_name and cloud_storage_account_key:
         cloud_storage = CloudStorage(
             cloud_storage_account_name,
-            cloud_storage_account_key
+            cloud_storage_account_key,
+            args.containername or 'pypic'
         )
 
     camera_controller = CameraController(

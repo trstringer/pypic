@@ -28,6 +28,9 @@ $ pypic -d 60 -o /video/output/dir/
 
 # continuously capture 5 minutes videos
 $ pypic -c -d 300 -o /video/output/dir/
+
+# capture and upload to a non-default container name
+$ pypic -c -d 300 -o /video/output/dir/ -t mycontainer
 ```
 
 ## Run on startup
