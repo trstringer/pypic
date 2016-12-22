@@ -25,19 +25,8 @@ def setup_logger():
     )
     return logger
 
-def exception_handler(exception_type, exception, traceback): # pylint: disable=unused-argument
-    """This is the logging handler that
-    will log uncaught exceptions. This
-    is important for running unattended
-    """
-
-    logging.error(str(exception))
-
-def main():
-    """Main script execution"""
-
-    logger = setup_logger()
-    sys.excepthook = exception_handler
+def parse_args():
+    """Parse and return passed arguments to the app"""
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -59,7 +48,23 @@ def main():
         '-t', '--containername',
         help='Cloud storage container name (default \'pypic\')'
     )
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def exception_handler(exception_type, exception, traceback): # pylint: disable=unused-argument
+    """This is the logging handler that
+    will log uncaught exceptions. This
+    is important for running unattended
+    """
+
+    logging.error(str(exception))
+
+def main():
+    """Main script execution"""
+
+    logger = setup_logger()
+    sys.excepthook = exception_handler
+
+    args = parse_args()
 
     if not args.outputdir:
         error_msg = 'You must specify an output directory (-o, --outputdir)'
