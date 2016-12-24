@@ -4,9 +4,10 @@ from datetime import datetime
 from multiprocessing import Pool
 import os
 import time
-from picamera import PiCamera
+from picamera import PiCamera  # pylint: disable=import-error
 
-class CameraController: # pylint: disable=too-few-public-methods
+
+class CameraController:  # pylint: disable=too-few-public-methods
     """Camera operations"""
 
     def __init__(self, local_path, cloud_storage):
@@ -20,13 +21,11 @@ class CameraController: # pylint: disable=too-few-public-methods
         pool = Pool()
 
         while True:
-            print('starting at {}'.format(str(datetime.now())))
             local_filename = self.__filename_generator()
             self.camera.start_recording(local_filename)
             time.sleep(duration)
             self.camera.stop_recording()
             if self.cloud_storage:
-                print('about to upload {} at {}'.format(local_filename, str(datetime.now())))
                 pool.apply_async(
                     self.cloud_storage.upload_file,
                     (local_filename,),
@@ -35,6 +34,7 @@ class CameraController: # pylint: disable=too-few-public-methods
             if not continuous:
                 break
 
+    # pylint: disable=no-self-use
     def __upload_callback(self, completed_successfully):
         print('upload callback :: {}'.format(completed_successfully))
 
