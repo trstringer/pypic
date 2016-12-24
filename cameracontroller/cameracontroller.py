@@ -1,11 +1,13 @@
 """Handle the camera"""
 
 from datetime import datetime
+from multiprocessing import Pool
 import os
 import time
-from picamera import PiCamera
+from picamera import PiCamera  # pylint: disable=import-error
 
-class CameraController: # pylint: disable=too-few-public-methods
+
+class CameraController:  # pylint: disable=too-few-public-methods
     """Camera operations"""
 
     def __init__(self, local_path, cloud_storage):
@@ -16,15 +18,25 @@ class CameraController: # pylint: disable=too-few-public-methods
     def record_video(self, continuous=False, duration=10):
         """Record a video either once or continuously"""
 
+        pool = Pool()
+
         while True:
             local_filename = self.__filename_generator()
             self.camera.start_recording(local_filename)
             time.sleep(duration)
             self.camera.stop_recording()
             if self.cloud_storage:
-                self.cloud_storage.upload_file(local_filename)
+                pool.apply_async(
+                    self.cloud_storage.upload_file,
+                    (local_filename,),
+                    callback=self.__upload_callback
+                )
             if not continuous:
                 break
+
+    # pylint: disable=no-self-use
+    def __upload_callback(self, completed_successfully):
+        print('upload callback :: {}'.format(completed_successfully))
 
     def __filename_generator(self):
         return os.path.join(
