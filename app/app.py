@@ -7,6 +7,7 @@ import sys
 from cameracontroller import CameraController
 from storage import CloudStorage
 
+
 def setup_logger():
     """Create the log directory if
     it doesn't exist and setup the
@@ -24,6 +25,7 @@ def setup_logger():
         level=logging.ERROR
     )
     return logger
+
 
 def parse_args():
     """Parse and return passed arguments to the app"""
@@ -50,13 +52,16 @@ def parse_args():
     )
     return parser.parse_args()
 
-def exception_handler(exception_type, exception, traceback): # pylint: disable=unused-argument
+
+# pylint: disable=unused-argument
+def exception_handler(exception_type, exception, traceback):
     """This is the logging handler that
     will log uncaught exceptions. This
     is important for running unattended
     """
 
     logging.error(str(exception))
+
 
 def main():
     """Main script execution"""
