@@ -51,7 +51,7 @@ def parse_args():
         '-t', '--containername',
         help='Cloud storage container name (default \'pypic\')'
     )
-    if len(sys.argv) == 0:
+    if len(sys.argv) < 2:
         parser.print_help()
         return None
     else:
