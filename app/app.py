@@ -6,6 +6,7 @@ import os
 import sys
 from cameracontroller import CameraController
 from storage import CloudStorage
+from data import create_upload_table
 
 
 def setup_logger():
@@ -76,6 +77,8 @@ def main():
         logger.error(error_msg)
         print(error_msg)
         sys.exit(1)
+
+    create_upload_table()
 
     cloud_storage_account_name = os.environ.get('AZSTORAGE_ACCOUNT_NAME')
     cloud_storage_account_key = os.environ.get('AZSTORAGE_ACCOUNT_KEY')

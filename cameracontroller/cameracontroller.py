@@ -5,6 +5,7 @@ from multiprocessing import Pool
 import os
 import time
 from picamera import PiCamera  # pylint: disable=import-error
+from data import insert_upload_data
 
 
 class CameraController:  # pylint: disable=too-few-public-methods
@@ -35,8 +36,14 @@ class CameraController:  # pylint: disable=too-few-public-methods
                 break
 
     # pylint: disable=no-self-use
-    def __upload_callback(self, completed_successfully):
-        print('upload callback :: {}'.format(completed_successfully))
+    def __upload_callback(self, output):
+        other_info = str(output['error']) if 'error' in output.keys() else ''
+        insert_upload_data(
+            output['filename'],
+            output['date_created'],
+            output['is_uploaded'],
+            other_info
+        )
 
     def __filename_generator(self):
         return os.path.join(
