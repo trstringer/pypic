@@ -51,7 +51,11 @@ def parse_args():
         '-t', '--containername',
         help='Cloud storage container name (default \'pypic\')'
     )
-    return parser.parse_args()
+    if len(sys.argv) == 0:
+        parser.print_help()
+        return None
+    else:
+        return parser.parse_args()
 
 
 # pylint: disable=unused-argument
@@ -71,6 +75,10 @@ def main():
     sys.excepthook = exception_handler
 
     args = parse_args()
+
+    # if no args were passed, the help menu was printed and we need to exit
+    if not args:
+        sys.exit(0)
 
     if not args.outputdir:
         error_msg = 'You must specify an output directory (-o, --outputdir)'
