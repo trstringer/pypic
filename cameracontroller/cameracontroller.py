@@ -36,6 +36,8 @@ class CameraController:  # pylint: disable=too-few-public-methods
                     callback=self.__upload_callback
                 )
             if not continuous:
+                pool.close()
+                pool.join()
                 break
 
     # pylint: disable=no-self-use
