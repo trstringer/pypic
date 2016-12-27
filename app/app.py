@@ -23,7 +23,7 @@ def setup_logger():
     logging.basicConfig(
         filename=os.path.join(log_dir, 'pypiclog'),
         format='%(asctime)s :: %(levelname)s :: %(message)s',
-        level=logging.ERROR
+        level=logging.DEBUG
     )
     return logger
 
