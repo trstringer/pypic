@@ -51,11 +51,31 @@ def parse_args():
         '-t', '--containername',
         help='Cloud storage container name (default \'pypic\')'
     )
+    parser.add_argument(
+        '-s', '--stop',
+        action='store_true',
+        help='Run this single switch to stop other process recording'
+    )
     if len(sys.argv) < 2:
         parser.print_help()
         return None
     else:
         return parser.parse_args()
+
+
+def create_stop_signal():
+    """Signal to other pypic processes that recording should be stopped"""
+
+    open(os.path.expanduser('~/.pypic_stop'), 'a').close()
+
+
+def remove_stop_signal():
+    """Remove any possible stop signal if it exists"""
+
+    try:
+        os.remove(os.path.expanduser('~/.pypic_stop'))
+    except FileNotFoundError:
+        pass
 
 
 # pylint: disable=unused-argument
@@ -79,6 +99,17 @@ def main():
     # if no args were passed, the help menu was printed and we need to exit
     if not args:
         sys.exit(0)
+
+    # if the user passed the stop switch then this control process is just
+    # meant to signal another pypic process to stop recording and exit
+    if args.stop:
+        create_stop_signal()
+        sys.exit(0)
+    # but if this is a main recording process, we need to eliminate any
+    # possibility that there is a residual stop signal file existing so that
+    # we don't get a false signal from a past process
+    else:
+        remove_stop_signal()
 
     if not args.outputdir:
         error_msg = 'You must specify an output directory (-o, --outputdir)'

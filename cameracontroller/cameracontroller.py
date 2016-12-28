@@ -35,10 +35,18 @@ class CameraController:  # pylint: disable=too-few-public-methods
                     (local_filename,),
                     callback=self.__upload_callback
                 )
-            if not continuous:
+            if not continuous or self.__stop_signal():
                 pool.close()
                 pool.join()
                 break
+
+    # pylint: disable=no-self-use
+    def __stop_signal(self):
+        if os.path.exists(os.path.expanduser('~/.pypic_stop')):
+            os.remove('~/.pypic_stop')
+            return True
+        else:
+            return False
 
     # pylint: disable=no-self-use
     def __upload_callback(self, output):
