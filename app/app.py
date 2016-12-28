@@ -44,6 +44,11 @@ def parse_args():
         help='Duration (in seconds) to run the video loop'
     )
     parser.add_argument(
+        '-f', '--forever',
+        action='store_true',
+        help='Capture a single video for an indefinite amount of time (pypic -s to stop)'  # NOQA
+    )
+    parser.add_argument(
         '-o', '--outputdir',
         help='Local directory to store video files'
     )
@@ -135,7 +140,8 @@ def main():
     )
     camera_controller.record_video(
         continuous=args.continuous,
-        duration=args.duration
+        duration=args.duration,
+        forever=args.forever
     )
 
 if __name__ == '__main__':

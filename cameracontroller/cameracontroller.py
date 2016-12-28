@@ -16,7 +16,7 @@ class CameraController:  # pylint: disable=too-few-public-methods
         self.cloud_storage = cloud_storage
         self.camera = PiCamera()
 
-    def record_video(self, continuous=False, duration=10):
+    def record_video(self, continuous=False, duration=10, forever=False):
         """Record a video either once or continuously"""
 
         pool = Pool()
@@ -24,7 +24,15 @@ class CameraController:  # pylint: disable=too-few-public-methods
         while True:
             local_filename = self.__filename_generator()
             self.camera.start_recording(local_filename)
-            time.sleep(duration)
+
+            if forever:
+                while True:
+                    if self.__stop_signal():
+                        break
+                    time.sleep(1)
+            else:
+                time.sleep(duration)
+
             self.camera.stop_recording()
             if self.cloud_storage:
                 pool.apply_async(
@@ -32,7 +40,7 @@ class CameraController:  # pylint: disable=too-few-public-methods
                     (local_filename,),
                     callback=self.__upload_callback
                 )
-            if not continuous or self.__stop_signal():
+            if not continuous or forever or self.__stop_signal():
                 pool.close()
                 pool.join()
                 break
