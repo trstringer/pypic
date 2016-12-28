@@ -74,7 +74,7 @@ def remove_stop_signal():
 
     try:
         os.remove(os.path.expanduser('~/.pypic_stop'))
-    except FileNotFoundError:
+    except FileNotFoundError:  # NOQA
         pass
 
 

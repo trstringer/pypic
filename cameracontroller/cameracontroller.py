@@ -2,7 +2,6 @@
 
 from datetime import datetime
 from multiprocessing import Pool
-import logging
 import os
 import time
 from picamera import PiCamera  # pylint: disable=import-error
@@ -27,9 +26,7 @@ class CameraController:  # pylint: disable=too-few-public-methods
             self.camera.start_recording(local_filename)
             time.sleep(duration)
             self.camera.stop_recording()
-            logging.debug('testing for cloud storage if defined')
             if self.cloud_storage:
-                logging.debug('cloud storage is defined')
                 pool.apply_async(
                     self.cloud_storage.upload_file,
                     (local_filename,),
@@ -50,7 +47,6 @@ class CameraController:  # pylint: disable=too-few-public-methods
 
     # pylint: disable=no-self-use
     def __upload_callback(self, output):
-        logging.debug('in upload callback')
         other_info = str(output['error']) if 'error' in output.keys() else ''
         insert_upload_data(
             output['filename'],
